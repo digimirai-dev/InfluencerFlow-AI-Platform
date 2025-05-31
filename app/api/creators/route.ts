@@ -17,12 +17,11 @@ export async function GET(request: NextRequest) {
 
     console.log('Fetching creators from Supabase...');
 
-    // First try a simple query without joins
+    // Fetch all creators without limit
     const { data: creators, error } = await supabase
       .from('creator_profiles')
       .select('*')
-      .order('follower_count_instagram', { ascending: false })
-      .limit(10);
+      .order('follower_count_instagram', { ascending: false });
 
     if (error) {
       console.error('Supabase query error:', error);
@@ -34,7 +33,7 @@ export async function GET(request: NextRequest) {
     // If we have creators, let's get the user data separately
     if (creators && creators.length > 0) {
       const userIds = creators.map(c => c.user_id);
-      console.log('Looking up user IDs:', userIds);
+      console.log('Looking up user IDs:', userIds.slice(0, 5), '... and', userIds.length - 5, 'more');
       
       const { data: users, error: userError } = await supabase
         .from('users')
