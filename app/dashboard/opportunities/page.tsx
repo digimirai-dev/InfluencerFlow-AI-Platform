@@ -44,7 +44,7 @@ interface Campaign {
     company_name: string
     industry: string
     location: string
-  }
+  } | null
   hasApplied?: boolean
 }
 
@@ -65,7 +65,9 @@ export default function OpportunitiesPage() {
   const fetchOpportunities = async () => {
     try {
       setLoading(true)
-      const response = await fetch(`/api/opportunities?creatorId=${userProfile?.id}`)
+      const response = await fetch(`/api/opportunities?creatorId=${userProfile?.id}`, {
+        credentials: 'include',
+      })
       const data = await response.json()
       setCampaigns(data || [])
     } catch (error) {
@@ -82,6 +84,7 @@ export default function OpportunitiesPage() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           campaign_id: campaignId,
           proposal_text: 'I would love to collaborate on this campaign. Please find my portfolio attached.',
@@ -116,7 +119,7 @@ export default function OpportunitiesPage() {
       const matchesSearch = 
         campaign.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         campaign.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        campaign.brand_profiles.company_name.toLowerCase().includes(searchTerm.toLowerCase())
+        (campaign.brand_profiles?.company_name?.toLowerCase().includes(searchTerm.toLowerCase()) || false)
       
       let matchesBudget = true
       if (budgetFilter !== 'all') {
@@ -255,7 +258,9 @@ export default function OpportunitiesPage() {
                   <div className="flex-1">
                     <CardTitle className="text-xl line-clamp-1">{campaign.title}</CardTitle>
                     <div className="flex items-center space-x-2 mt-1">
-                      <span className="text-sm text-gray-600">{campaign.brand_profiles.company_name}</span>
+                      <span className="text-sm text-gray-600">
+                        {campaign.brand_profiles?.company_name || 'Unknown Brand'}
+                      </span>
                       <Badge className={getStatusColor(campaign.status)}>
                         {campaign.status}
                       </Badge>
@@ -281,7 +286,7 @@ export default function OpportunitiesPage() {
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div className="flex items-center space-x-2">
                     <MapPin className="h-4 w-4 text-gray-400" />
-                    <span>{campaign.brand_profiles.location}</span>
+                    <span>{campaign.brand_profiles?.location || 'Location not specified'}</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Users className="h-4 w-4 text-gray-400" />

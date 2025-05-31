@@ -147,6 +147,7 @@ export default function NewCampaignPage() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           ...formData,
           brand_id: userProfile.id
