@@ -1,60 +1,49 @@
-# InfluencerFlow 🚀
+# InfluencerFlow SaaS Platform
 
-The ultimate SaaS platform for influencer marketing collaborations. Connect brands with creators, manage campaigns, and track performance with AI-powered tools.
+A comprehensive full-stack SaaS platform that connects social media influencers with brands for seamless collaborations, featuring AI-powered creator discovery, automated outreach, and campaign management.
 
-## 🌟 Features
+## 🚀 Features
 
 ### For Brands
-- **AI Creator Discovery**: Find perfect creators using AI-powered search and recommendations
-- **Smart Outreach**: Automate personalized outreach with AI-generated messages
-- **Campaign Management**: Create and manage campaigns with detailed briefs and requirements
-- **Contract Generation**: Automated contract creation and digital signing
-- **Payment Processing**: Secure milestone-based payments through Stripe
-- **Performance Analytics**: Track campaign ROI and engagement metrics
-- **Real-time Chat**: Communicate with creators in real-time
+- **Creator Discovery**: AI-powered search and filtering to find the perfect influencers
+- **Campaign Management**: Create, manage, and track marketing campaigns
+- **Automated Outreach**: Streamlined communication with creators
+- **Analytics Dashboard**: Real-time insights and performance metrics
+- **Payment Processing**: Secure payment handling and invoicing
 
 ### For Creators
-- **Profile Management**: Showcase your work with portfolio and social media integration
-- **Campaign Discovery**: Find relevant campaigns matching your niche and audience
-- **AI-Powered Proposals**: Generate compelling proposals with AI assistance
-- **Deliverable Management**: Submit and track content deliverables
-- **Earnings Tracker**: Monitor payments and earnings across campaigns
-- **Voice Notes**: Send voice messages with automatic transcription
+- **Opportunity Discovery**: Browse and apply to relevant brand campaigns
+- **Portfolio Management**: Showcase your content and engagement metrics
+- **Application Tracking**: Monitor campaign applications and status
+- **Earnings Dashboard**: Track payments and financial performance
+- **Direct Messaging**: Communicate directly with brands
 
-### AI Features
-- **GPT Integration**: Auto-generate outreach messages, replies, and campaign descriptions
-- **Whisper Integration**: Voice-to-text transcription for voice notes
-- **ElevenLabs**: AI voice synthesis for voice replies
-- **Translation**: Multi-language support for global collaborations
-- **Semantic Search**: Find creators using natural language queries
+### Platform Features
+- **Real-time Messaging**: Built-in chat system for brand-creator communication
+- **Instagram Integration**: Connect and sync Instagram profiles and metrics
+- **Advanced Filtering**: Search by niche, engagement rate, follower count, and more
+- **Secure Authentication**: Supabase-powered user management
+- **Responsive Design**: Modern UI that works on all devices
 
 ## 🛠️ Tech Stack
 
-### Frontend
-- **Framework**: Next.js 14 with App Router
-- **Styling**: Tailwind CSS + ShadCN UI
-- **State Management**: Zustand
+- **Frontend**: Next.js 14, React, TypeScript, Tailwind CSS
+- **Backend**: Next.js API Routes, Supabase
+- **Database**: PostgreSQL (via Supabase)
 - **Authentication**: Supabase Auth
-- **Charts**: Recharts
-- **Notifications**: React Hot Toast
+- **UI Components**: ShadCN UI
+- **Styling**: Tailwind CSS
+- **API Integration**: Instagram Basic Display API
 
-### Backend
-- **Platform**: Supabase
-- **Database**: PostgreSQL with Row Level Security
-- **File Storage**: Supabase Storage
-- **Real-time**: Supabase Realtime
+## 📊 Database Schema
 
-### AI & APIs
-- **OpenAI**: GPT-4 for content generation
-- **Whisper**: Voice transcription
-- **ElevenLabs**: Voice synthesis
-- **Google Translate**: Multi-language support
-- **YouTube/Instagram APIs**: Creator data fetching
-
-### Payments & Integrations
-- **Stripe**: Payment processing
-- **DocuSign**: Contract signing
-- **Gmail API**: Email integration
+The platform includes a comprehensive database schema with:
+- User management (brands and creators)
+- Campaign and collaboration tracking
+- Messaging system
+- Payment processing
+- File uploads and notifications
+- AI prompt logging
 
 ## 🚀 Getting Started
 
@@ -62,15 +51,13 @@ The ultimate SaaS platform for influencer marketing collaborations. Connect bran
 - Node.js 18+ 
 - npm or yarn
 - Supabase account
-- OpenAI API key
-- Stripe account
 
 ### Installation
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/influencerflow.git
-   cd influencerflow
+   git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
+   cd YOUR_REPO_NAME
    ```
 
 2. **Install dependencies**
@@ -85,27 +72,17 @@ The ultimate SaaS platform for influencer marketing collaborations. Connect bran
    
    Fill in your environment variables:
    ```env
-   # Supabase
    NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-   SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
-   
-   # OpenAI
-   OPENAI_API_KEY=your_openai_api_key
-   
-   # Stripe
-   STRIPE_SECRET_KEY=your_stripe_secret_key
-   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
-   
-   # Add other API keys as needed
+   INSTAGRAM_ACCESS_TOKEN=your_instagram_access_token
+   FACEBOOK_APP_ID=your_facebook_app_id
+   FACEBOOK_APP_SECRET=your_facebook_app_secret
    ```
 
-4. **Set up Supabase database**
-   ```bash
-   # Run the schema.sql file in your Supabase SQL editor
-   # Or use the Supabase CLI:
-   supabase db reset
-   ```
+4. **Set up the database**
+   - Create a new Supabase project
+   - Run the SQL schema from `supabase/schema.sql`
+   - The schema includes all tables, RLS policies, and sample data
 
 5. **Run the development server**
    ```bash
@@ -115,98 +92,66 @@ The ultimate SaaS platform for influencer marketing collaborations. Connect bran
 6. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
 
-## 📁 Project Structure
+## 📱 Demo
 
-```
-influencerflow/
-├── app/                    # Next.js App Router
-│   ├── auth/              # Authentication pages
-│   ├── dashboard/         # Dashboard pages
-│   ├── campaigns/         # Campaign management
-│   ├── creators/          # Creator discovery
-│   ├── chat/              # Real-time chat
-│   └── admin/             # Admin panel
-├── components/            # Reusable components
-│   ├── ui/                # ShadCN UI components
-│   ├── forms/             # Form components
-│   ├── charts/            # Chart components
-│   └── providers/         # Context providers
-├── lib/                   # Utility libraries
-│   ├── supabase.ts        # Supabase client
-│   ├── openai.ts          # OpenAI integration
-│   ├── stripe.ts          # Stripe integration
-│   └── utils.ts           # Helper functions
-├── types/                 # TypeScript type definitions
-├── hooks/                 # Custom React hooks
-├── stores/                # Zustand stores
-├── supabase/              # Database schema and migrations
-└── public/                # Static assets
-```
+The platform includes a demo mode with mock data for testing:
+- Demo brand user with sample campaigns
+- Mock creator profiles with realistic metrics
+- Sample conversations and applications
+- Test payment history
 
 ## 🔧 Configuration
 
+### Instagram API Setup
+1. Create a Facebook App at [developers.facebook.com](https://developers.facebook.com)
+2. Add Instagram Basic Display product
+3. Configure redirect URIs and permissions
+4. Add your credentials to `.env.local`
+
 ### Supabase Setup
-1. Create a new Supabase project
-2. Run the SQL schema from `supabase/schema.sql`
-3. Set up Row Level Security policies
-4. Configure authentication providers (Google, GitHub, etc.)
-5. Set up storage buckets for file uploads
+1. Create a new project at [supabase.com](https://supabase.com)
+2. Copy your project URL and anon key
+3. Run the provided SQL schema
+4. Configure RLS policies as needed
 
-### OpenAI Setup
-1. Get an API key from OpenAI
-2. Configure usage limits and billing
-3. Test the integration with the AI features
+## 📈 Key Metrics (Mock Data)
 
-### Stripe Setup
-1. Create a Stripe account
-2. Get your API keys (test and live)
-3. Set up webhooks for payment events
-4. Configure products and pricing
+- **13 Active Creators** across diverse niches
+- **3 Brand Partners** with active campaigns
+- **$70,000** in total campaign budgets
+- **160K+** average creator followers
+- **5.36%** average engagement rate
 
-## 🚀 Deployment
+## 🎯 Creator Niches Supported
 
-### Vercel (Recommended)
-1. Connect your GitHub repository to Vercel
-2. Set environment variables in Vercel dashboard
-3. Deploy automatically on push to main branch
+- Lifestyle & Fashion
+- Fitness & Wellness
+- Beauty & Skincare
+- Technology & Gaming
+- Travel & Adventure
+- Food & Cooking
+- Art & Design
+- Music & Entertainment
+- Finance & Business
+- Parenting & Family
 
-### Other Platforms
-- **Netlify**: Configure build settings and environment variables
-- **Railway**: Use the provided Dockerfile
-- **DigitalOcean**: Deploy using App Platform
+## 🔐 Security Features
 
-## 🧪 Testing
-
-```bash
-# Run tests
-npm test
-
-# Run tests in watch mode
-npm run test:watch
-
-# Run E2E tests
-npm run test:e2e
-```
-
-## 📊 Database Schema
-
-The application uses PostgreSQL with the following main tables:
-- `users` - User accounts and profiles
-- `brand_profiles` - Brand-specific information
-- `creator_profiles` - Creator-specific information
-- `campaigns` - Campaign details and requirements
-- `collaborations` - Active collaborations between brands and creators
-- `messages` - Real-time chat messages
-- `payments` - Payment transactions and milestones
-- `notifications` - User notifications
-
-## 🔐 Security
-
-- Row Level Security (RLS) enabled on all tables
-- JWT-based authentication with Supabase
-- API rate limiting
+- Row Level Security (RLS) policies
+- Secure authentication with Supabase
+- Protected API routes
 - Input validation and sanitization
-- Secure file upload handling
+- Environment variable protection
+
+## 📝 API Documentation
+
+### Key Endpoints
+
+- `GET /api/creators` - Fetch creator profiles
+- `GET /api/campaigns` - Get campaign listings
+- `POST /api/campaign-applications` - Submit applications
+- `GET /api/messages` - Retrieve conversations
+- `GET /api/dashboard/stats` - Dashboard analytics
 
 ## 🤝 Contributing
 
@@ -216,25 +161,21 @@ The application uses PostgreSQL with the following main tables:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📝 License
+## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🆘 Support
+## 🙏 Acknowledgments
 
-- **Documentation**: [docs.influencerflow.com](https://docs.influencerflow.com)
-- **Discord**: [Join our community](https://discord.gg/influencerflow)
-- **Email**: support@influencerflow.com
+- [Supabase](https://supabase.com) for the backend infrastructure
+- [ShadCN UI](https://ui.shadcn.com) for the component library
+- [Tailwind CSS](https://tailwindcss.com) for styling
+- [Next.js](https://nextjs.org) for the React framework
 
-## 🗺️ Roadmap
+## 📞 Support
 
-- [ ] Mobile app (React Native)
-- [ ] Advanced analytics dashboard
-- [ ] Multi-language support
-- [ ] API for third-party integrations
-- [ ] White-label solutions
-- [ ] Advanced AI features (content generation, trend analysis)
+For support, email support@influencerflow.com or join our Discord community.
 
 ---
 
-Built with ❤️ by the InfluencerFlow team 
+**Built with ❤️ for the creator economy** 
