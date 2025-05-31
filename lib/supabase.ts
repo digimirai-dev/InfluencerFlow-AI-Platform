@@ -1,5 +1,4 @@
 import { createClient } from '@supabase/supabase-js'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://pmegrknwfnntlosiwfcp.supabase.co'
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtZWdya253Zm5udGxvc2l3ZmNwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg2MDY0NjcsImV4cCI6MjA2NDE4MjQ2N30.siXPlVkWfNpK64jyKHvrAOmNpCeLWRMgdHVn9s6e6tQ'
@@ -7,21 +6,26 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOi
 // Check if we're in placeholder mode
 const isPlaceholderMode = supabaseUrl === 'https://placeholder.supabase.co' || !process.env.NEXT_PUBLIC_SUPABASE_URL
 
-// Client-side Supabase client
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-  },
-})
+// Singleton pattern to ensure only one Supabase client instance
+let supabaseInstance: ReturnType<typeof createClient> | null = null
 
-// Client component Supabase client
-export const createSupabaseClient = () => {
-  if (isPlaceholderMode) {
-    // Return the basic client for placeholder mode
-    return supabase
+// Client-side Supabase client
+export const supabase = (() => {
+  if (!supabaseInstance) {
+    supabaseInstance = createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+      },
+    })
   }
-  return createClientComponentClient<Database>()
+  return supabaseInstance
+})()
+
+// Client component Supabase client - return the same singleton instance
+export const createSupabaseClient = () => {
+  return supabase
 }
 
 // Database types generated from Supabase

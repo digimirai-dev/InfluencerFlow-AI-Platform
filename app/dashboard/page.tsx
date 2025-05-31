@@ -13,7 +13,10 @@ import {
   MessageSquare,
   Calendar,
   Clock,
-  CheckCircle
+  CheckCircle,
+  Building,
+  BarChart3,
+  Shield
 } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
@@ -28,6 +31,13 @@ interface DashboardStats {
   completedProjects?: number
   campaigns?: any[]
   recentCollaborations?: any[]
+  // Admin specific stats
+  totalUsers?: number
+  totalBrands?: number
+  totalCampaigns?: number
+  totalCollaborations?: number
+  platformRevenue?: number
+  monthlyGrowth?: number
 }
 
 interface Campaign {
@@ -353,9 +363,152 @@ export default function DashboardPage() {
     </div>
   )
 
+  const renderAdminDashboard = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+          <p className="text-gray-600">Platform overview and management</p>
+        </div>
+        <Link href="/dashboard/analytics">
+          <Button>
+            <BarChart3 className="mr-2 h-4 w-4" />
+            View Analytics
+          </Button>
+        </Link>
+      </div>
+
+      {/* Admin Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Users</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats?.totalUsers || 0}</div>
+            <p className="text-xs text-muted-foreground">+{stats?.monthlyGrowth || 0}% from last month</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Active Campaigns</CardTitle>
+            <Megaphone className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats?.activeCampaigns || 0}</div>
+            <p className="text-xs text-muted-foreground">of {stats?.totalCampaigns || 0} total</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Platform Revenue</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              ${stats?.platformRevenue ? stats.platformRevenue.toLocaleString() : '0'}
+            </div>
+            <p className="text-xs text-muted-foreground">10% commission</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Collaborations</CardTitle>
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats?.totalCollaborations || 0}</div>
+            <p className="text-xs text-muted-foreground">Total completed</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Platform Overview */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Platform Breakdown</CardTitle>
+            <CardDescription>User distribution and activity</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Users className="h-4 w-4 text-blue-500" />
+                <span className="text-sm font-medium">Creators</span>
+              </div>
+              <span className="text-sm font-bold">{stats?.totalCreators || 0}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Building className="h-4 w-4 text-green-500" />
+                <span className="text-sm font-medium">Brands</span>
+              </div>
+              <span className="text-sm font-bold">{stats?.totalBrands || 0}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Megaphone className="h-4 w-4 text-purple-500" />
+                <span className="text-sm font-medium">Total Campaigns</span>
+              </div>
+              <span className="text-sm font-bold">{stats?.totalCampaigns || 0}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <TrendingUp className="h-4 w-4 text-orange-500" />
+                <span className="text-sm font-medium">Monthly Growth</span>
+              </div>
+              <span className="text-sm font-bold text-green-600">+{stats?.monthlyGrowth || 0}%</span>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Admin Actions</CardTitle>
+            <CardDescription>Platform management tools</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <Link href="/dashboard/users">
+              <Button variant="outline" className="w-full justify-start">
+                <Users className="mr-2 h-4 w-4" />
+                Manage Users
+              </Button>
+            </Link>
+            <Link href="/dashboard/campaigns">
+              <Button variant="outline" className="w-full justify-start">
+                <Megaphone className="mr-2 h-4 w-4" />
+                Review Campaigns
+              </Button>
+            </Link>
+            <Link href="/dashboard/analytics">
+              <Button variant="outline" className="w-full justify-start">
+                <BarChart3 className="mr-2 h-4 w-4" />
+                Platform Analytics
+              </Button>
+            </Link>
+            <Link href="/dashboard/settings">
+              <Button variant="outline" className="w-full justify-start">
+                <Shield className="mr-2 h-4 w-4" />
+                Platform Settings
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  )
+
   return (
     <div className="p-6">
-      {userProfile.user_type === 'brand' ? renderBrandDashboard() : renderCreatorDashboard()}
+      {userProfile.user_type === 'brand' 
+        ? renderBrandDashboard() 
+        : userProfile.user_type === 'admin'
+        ? renderAdminDashboard()
+        : renderCreatorDashboard()}
     </div>
   )
 } 

@@ -15,12 +15,18 @@ export async function GET(request: NextRequest) {
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
     );
 
-    console.log('Fetching creators from Supabase...');
-
-    // Fetch all creators without limit
-    const { data: creators, error } = await supabase
+    // Use a single query with JOIN to get both creator and user data
+    const { data: creatorsWithUsers, error } = await supabase
       .from('creator_profiles')
-      .select('*')
+      .select(`
+        *,
+        users (
+          id,
+          full_name,
+          avatar_url,
+          email
+        )
+      `)
       .order('follower_count_instagram', { ascending: false });
 
     if (error) {
@@ -28,42 +34,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json([], { status: 200 });
     }
 
-    console.log(`Found ${creators?.length || 0} creators`);
-    
-    // If we have creators, let's get the user data separately
-    if (creators && creators.length > 0) {
-      const userIds = creators.map(c => c.user_id);
-      console.log('Looking up user IDs:', userIds.slice(0, 5), '... and', userIds.length - 5, 'more');
-      
-      const { data: users, error: userError } = await supabase
-        .from('users')
-        .select('id, full_name, avatar_url, email')
-        .in('id', userIds);
-      
-      if (userError) {
-        console.error('User lookup error:', userError);
-      } else {
-        console.log(`Found ${users?.length || 0} users`);
-      }
-      
-      // Combine the data
-      const creatorsWithUsers = creators.map(creator => {
-        const user = users?.find(user => user.id === creator.user_id);
-        return {
-          ...creator,
-          users: user || {
-            id: creator.user_id,
-            full_name: creator.display_name,
-            avatar_url: null,
-            email: null
-          }
-        };
-      });
-      
-      return NextResponse.json(creatorsWithUsers);
-    }
-
-    return NextResponse.json(creators || []);
+    return NextResponse.json(creatorsWithUsers || []);
 
   } catch (error) {
     console.error('Creators API error:', error);

@@ -53,6 +53,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(mockCampaigns);
     }
 
+    // Get campaigns first
     let query = supabase
       .from('campaigns')
       .select(`
@@ -66,7 +67,7 @@ export async function GET(request: NextRequest) {
         timeline_start,
         timeline_end,
         created_at,
-        brand_profiles!inner(company_name)
+        brand_id
       `)
       .order('created_at', { ascending: false })
       .limit(10);
@@ -86,7 +87,20 @@ export async function GET(request: NextRequest) {
       return NextResponse.json([], { status: 200 });
     }
 
-    // For each campaign, get collaboration count
+    // Get brand profiles for all campaigns
+    const brandIds = campaigns.map(c => c.brand_id).filter((id, index, arr) => arr.indexOf(id) === index);
+    const { data: brandProfiles } = await supabase
+      .from('brand_profiles')
+      .select('user_id, company_name')
+      .in('user_id', brandIds);
+
+    // Create a map for quick lookup
+    const brandProfileMap = new Map();
+    brandProfiles?.forEach(profile => {
+      brandProfileMap.set(profile.user_id, profile);
+    });
+
+    // For each campaign, get collaboration count and attach brand profile
     const campaignsWithStats = await Promise.all(
       campaigns.map(async (campaign) => {
         try {
@@ -96,16 +110,20 @@ export async function GET(request: NextRequest) {
             .eq('campaign_id', campaign.id);
 
           const activeCollaborations = collaborations?.filter(c => c.status === 'active').length || 0;
+          const brandProfile = brandProfileMap.get(campaign.brand_id) || { company_name: 'Unknown Company' };
 
           return {
             ...campaign,
+            brand_profiles: brandProfile,
             activeCollaborations,
             totalCollaborations: collaborations?.length || 0
           };
         } catch (collabError) {
           console.error('Error fetching collaborations for campaign:', campaign.id, collabError);
+          const brandProfile = brandProfileMap.get(campaign.brand_id) || { company_name: 'Unknown Company' };
           return {
             ...campaign,
+            brand_profiles: brandProfile,
             activeCollaborations: 0,
             totalCollaborations: 0
           };
