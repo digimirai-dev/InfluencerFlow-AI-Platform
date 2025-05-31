@@ -1,181 +1,104 @@
-# InfluencerFlow SaaS Platform
+# InfluencerFlow
 
-A comprehensive full-stack SaaS platform that connects social media influencers with brands for seamless collaborations, featuring AI-powered creator discovery, automated outreach, and campaign management.
+A platform that connects influencers with brands for collaborations. Built with Next.js and Supabase.
 
-## 🚀 Features
+## What it does
+
+This is a web app where brands can find influencers and vice versa. Brands post campaigns, influencers apply, and they can chat to work out the details.
 
 ### For Brands
-- **Creator Discovery**: AI-powered search and filtering to find the perfect influencers
-- **Campaign Management**: Create, manage, and track marketing campaigns
-- **Automated Outreach**: Streamlined communication with creators
-- **Analytics Dashboard**: Real-time insights and performance metrics
-- **Payment Processing**: Secure payment handling and invoicing
+- Search for influencers by niche, followers, engagement rate
+- Create campaigns with budgets and requirements  
+- Review applications from creators
+- Message influencers directly
+- Track campaign performance
 
-### For Creators
-- **Opportunity Discovery**: Browse and apply to relevant brand campaigns
-- **Portfolio Management**: Showcase your content and engagement metrics
-- **Application Tracking**: Monitor campaign applications and status
-- **Earnings Dashboard**: Track payments and financial performance
-- **Direct Messaging**: Communicate directly with brands
+### For Influencers
+- Browse available campaigns
+- Apply to ones that match your audience
+- Chat with brands about collaborations
+- Track your applications and earnings
+- Connect your Instagram for automatic stats
 
-### Platform Features
-- **Real-time Messaging**: Built-in chat system for brand-creator communication
-- **Instagram Integration**: Connect and sync Instagram profiles and metrics
-- **Advanced Filtering**: Search by niche, engagement rate, follower count, and more
-- **Secure Authentication**: Supabase-powered user management
-- **Responsive Design**: Modern UI that works on all devices
+## Tech Stack
 
-## 🛠️ Tech Stack
+- **Frontend**: Next.js 14, TypeScript, Tailwind CSS
+- **Backend**: Supabase (PostgreSQL + Auth + Real-time)
+- **UI**: ShadCN components
+- **APIs**: Instagram Basic Display API
 
-- **Frontend**: Next.js 14, React, TypeScript, Tailwind CSS
-- **Backend**: Next.js API Routes, Supabase
-- **Database**: PostgreSQL (via Supabase)
-- **Authentication**: Supabase Auth
-- **UI Components**: ShadCN UI
-- **Styling**: Tailwind CSS
-- **API Integration**: Instagram Basic Display API
+## Database
 
-## 📊 Database Schema
+The app has tables for users, campaigns, applications, messages, payments, etc. All set up with proper relationships and security policies.
 
-The platform includes a comprehensive database schema with:
-- User management (brands and creators)
-- Campaign and collaboration tracking
-- Messaging system
-- Payment processing
-- File uploads and notifications
-- AI prompt logging
+## Getting Started
 
-## 🚀 Getting Started
+You'll need Node.js and a Supabase account.
 
-### Prerequisites
-- Node.js 18+ 
-- npm or yarn
-- Supabase account
+```bash
+git clone https://github.com/digimirai-dev/InfluencerFlow-AI-Platform.git
+cd InfluencerFlow-AI-Platform
+npm install
+```
 
-### Installation
+Copy `env.example` to `.env.local` and fill in your Supabase credentials:
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
-   cd YOUR_REPO_NAME
-   ```
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+Run the SQL schema from `supabase/schema.sql` in your Supabase project, then:
 
-3. **Set up environment variables**
-   ```bash
-   cp env.example .env.local
-   ```
-   
-   Fill in your environment variables:
-   ```env
-   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-   INSTAGRAM_ACCESS_TOKEN=your_instagram_access_token
-   FACEBOOK_APP_ID=your_facebook_app_id
-   FACEBOOK_APP_SECRET=your_facebook_app_secret
-   ```
+```bash
+npm run dev
+```
 
-4. **Set up the database**
-   - Create a new Supabase project
-   - Run the SQL schema from `supabase/schema.sql`
-   - The schema includes all tables, RLS policies, and sample data
+## Demo Mode
 
-5. **Run the development server**
-   ```bash
-   npm run dev
-   ```
+The app includes demo data so you can test it without setting up real accounts. Just browse around the dashboard to see how it works.
 
-6. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000)
+## Current Features
 
-## 📱 Demo
+- User authentication (brands vs creators)
+- Campaign creation and browsing
+- Application system
+- Real-time messaging
+- Instagram profile integration
+- Payment tracking
+- Dashboard with stats
 
-The platform includes a demo mode with mock data for testing:
-- Demo brand user with sample campaigns
-- Mock creator profiles with realistic metrics
-- Sample conversations and applications
-- Test payment history
+## Sample Data
 
-## 🔧 Configuration
+I've included some mock data:
+- 13 test creator profiles across different niches
+- 3 sample brands with active campaigns
+- Example conversations and applications
+- Fake payment history
 
-### Instagram API Setup
-1. Create a Facebook App at [developers.facebook.com](https://developers.facebook.com)
-2. Add Instagram Basic Display product
-3. Configure redirect URIs and permissions
-4. Add your credentials to `.env.local`
+## Instagram Setup
 
-### Supabase Setup
-1. Create a new project at [supabase.com](https://supabase.com)
-2. Copy your project URL and anon key
-3. Run the provided SQL schema
-4. Configure RLS policies as needed
+If you want to connect real Instagram accounts:
 
-## 📈 Key Metrics (Mock Data)
+1. Create a Facebook app at developers.facebook.com
+2. Add Instagram Basic Display
+3. Get your access token and app credentials
+4. Add them to your .env.local file
 
-- **13 Active Creators** across diverse niches
-- **3 Brand Partners** with active campaigns
-- **$70,000** in total campaign budgets
-- **160K+** average creator followers
-- **5.36%** average engagement rate
+## Contributing
 
-## 🎯 Creator Niches Supported
+Feel free to fork and submit PRs. The code could definitely use some cleanup and there are plenty of features that could be added.
 
-- Lifestyle & Fashion
-- Fitness & Wellness
-- Beauty & Skincare
-- Technology & Gaming
-- Travel & Adventure
-- Food & Cooking
-- Art & Design
-- Music & Entertainment
-- Finance & Business
-- Parenting & Family
+## License
 
-## 🔐 Security Features
+MIT License - do whatever you want with it.
 
-- Row Level Security (RLS) policies
-- Secure authentication with Supabase
-- Protected API routes
-- Input validation and sanitization
-- Environment variable protection
+## Notes
 
-## 📝 API Documentation
+This was built as a learning project to understand how influencer marketing platforms work. The payment system is just for demo purposes - you'd need to integrate with Stripe or similar for real transactions.
 
-### Key Endpoints
-
-- `GET /api/creators` - Fetch creator profiles
-- `GET /api/campaigns` - Get campaign listings
-- `POST /api/campaign-applications` - Submit applications
-- `GET /api/messages` - Retrieve conversations
-- `GET /api/dashboard/stats` - Dashboard analytics
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- [Supabase](https://supabase.com) for the backend infrastructure
-- [ShadCN UI](https://ui.shadcn.com) for the component library
-- [Tailwind CSS](https://tailwindcss.com) for styling
-- [Next.js](https://nextjs.org) for the React framework
-
-## 📞 Support
-
-For support, email support@influencerflow.com or join our Discord community.
+If you're actually building something like this for production, you'll want to add proper error handling, rate limiting, email notifications, and a bunch of other stuff I didn't get to.
 
 ---
 
-**Built with ❤️ for the creator economy** 
+Built by someone who wanted to understand the creator economy better.
