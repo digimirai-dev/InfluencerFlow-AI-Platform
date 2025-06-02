@@ -1,5 +1,14 @@
 # InfluencerFlow AI Platform 🚀
 
+The login Details for the Brand account = 
+avsstdio159@gmail.com
+9423934065
+
+The Logi Details for the Creator Account = 
+159patilgaurav@gmail.com
+9423934065
+
+
 ## 🏆 Hackathon Submission - AI-Powered Influencer Marketing Platform
 
 **InfluencerFlow AI** is a comprehensive, AI-powered influencer marketing platform that revolutionizes how brands connect with creators through intelligent matching, automated contract generation, and streamlined collaboration management.
