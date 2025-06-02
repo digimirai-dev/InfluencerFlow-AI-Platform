@@ -36,15 +36,15 @@ interface Campaign {
   timeline_start: string
   timeline_end: string
   requirements: string[]
-  target_audience: string
+  target_audience: string | { niches: string[]; description: string }
   deliverables: string[]
   applications_count: number
   created_at: string
-  brand_profiles: {
+  brand_profiles?: {
     company_name: string
     industry: string
     location: string
-  } | null
+  }
   hasApplied?: boolean
 }
 
@@ -290,7 +290,7 @@ export default function OpportunitiesPage() {
                   </div>
                   <div className="flex items-center space-x-2">
                     <Users className="h-4 w-4 text-gray-400" />
-                    <span>{campaign.target_audience}</span>
+                    <span>{typeof campaign.target_audience === 'string' ? campaign.target_audience : campaign.target_audience.description}</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Calendar className="h-4 w-4 text-gray-400" />

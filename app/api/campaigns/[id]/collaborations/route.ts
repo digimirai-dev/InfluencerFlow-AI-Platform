@@ -53,10 +53,11 @@ function getMockCollaborations(campaignId: string) {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const campaignId = params.id;
+    // Await params to fix Next.js warning
+    const { id: campaignId } = await params
     console.log('Fetching collaborations for campaign:', campaignId);
 
     // Check if this is a demo campaign (not a valid UUID)

@@ -24,7 +24,7 @@ function getMockApplications(campaignId: string) {
           follower_count_youtube: 12000,
           engagement_rate: 4.2,
           rate_per_post: 1200,
-          niches: ['Fashion', 'Lifestyle', 'Beauty'],
+          niche: ['Fashion', 'Lifestyle', 'Beauty'],
           location: 'Los Angeles, CA',
           users: {
             full_name: 'Sarah Johnson',
@@ -45,7 +45,7 @@ function getMockApplications(campaignId: string) {
           follower_count_youtube: 25000,
           engagement_rate: 5.1,
           rate_per_post: 1800,
-          niches: ['Fashion', 'Style', 'Shopping'],
+          niche: ['Fashion', 'Style', 'Shopping'],
           location: 'New York, NY',
           users: {
             full_name: 'Emma Rodriguez',
@@ -68,7 +68,7 @@ function getMockApplications(campaignId: string) {
           follower_count_youtube: 180000,
           engagement_rate: 6.8,
           rate_per_post: 2500,
-          niches: ['Technology', 'Productivity', 'Apps'],
+          niche: ['Technology', 'Productivity', 'Apps'],
           location: 'Austin, TX',
           users: {
             full_name: 'Alex Chen',
@@ -84,10 +84,11 @@ function getMockApplications(campaignId: string) {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const campaignId = params.id;
+    // Await params to fix Next.js warning
+    const { id: campaignId } = await params
     console.log('Fetching applications for campaign:', campaignId);
 
     // Check if this is a demo campaign (not a valid UUID)
@@ -163,7 +164,7 @@ export async function GET(
         ...app,
         creator_profiles: {
           ...creatorProfile,
-          niches: creatorProfile?.niches || [],
+          niche: creatorProfile?.niche || [],
           users: user || {
             full_name: 'Unknown User',
             avatar_url: null

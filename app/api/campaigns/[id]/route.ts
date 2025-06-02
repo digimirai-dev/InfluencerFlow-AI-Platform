@@ -7,51 +7,51 @@ function isValidUUID(str: string): boolean {
   return uuidRegex.test(str);
 }
 
-// Mock campaign data for demo campaigns
-function getMockCampaign(campaignId: string) {
+// Mock campaigns data for demo
+function getMockCampaignData(campaignId: string) {
   const mockCampaigns: { [key: string]: any } = {
     'demo-campaign-1': {
       id: 'demo-campaign-1',
       title: 'Summer Fashion Collection',
-      description: 'Promote our new summer fashion line with authentic lifestyle content that resonates with young professionals.',
+      description: 'Looking for fashion influencers to showcase our new summer collection. We want authentic content that resonates with young adults aged 18-25.',
       status: 'active',
-      budget_min: 2000,
-      budget_max: 5000,
+      budget_min: 1000,
+      budget_max: 3000,
       timeline_start: '2024-06-01',
-      timeline_end: '2024-07-15',
-      requirements: ['Fashion & Lifestyle content', 'Minimum 50K followers', '3%+ engagement rate'],
-      target_audience: 'Young professionals aged 25-35',
-      deliverables: ['Instagram Reel', 'Story Series', 'Feed Post'],
-      applications_count: 12,
-      created_at: '2024-05-15T10:00:00Z',
+      timeline_end: '2024-08-31',
+      requirements: ['Fashion content', 'Instagram posts', 'Stories'],
+      target_audience: 'Young adults 18-25',
+      deliverables: ['2 Instagram posts', '5 stories', '1 reel'],
+      applications_count: 15,
+      created_at: '2024-05-20T10:00:00Z',
       brand_profiles: {
-        company_name: 'FashionCo',
-        industry: 'Fashion & Retail',
+        company_name: 'TrendyWear Co.',
+        industry: 'Fashion',
         location: 'New York, NY',
-        website: 'https://fashionco.com',
-        description: 'Leading fashion brand focused on sustainable and trendy clothing for modern professionals.'
+        website: 'https://trendywear.com',
+        description: 'Trendy fashion brand for young professionals'
       }
     },
     'demo-campaign-2': {
       id: 'demo-campaign-2',
       title: 'Tech Product Launch',
-      description: 'Launch campaign for our innovative productivity app targeting busy professionals and entrepreneurs.',
+      description: 'Launching our new productivity app and need tech reviewers to create honest reviews and tutorials.',
       status: 'active',
-      budget_min: 5000,
-      budget_max: 10000,
+      budget_min: 2000,
+      budget_max: 5000,
       timeline_start: '2024-06-15',
-      timeline_end: '2024-08-01',
-      requirements: ['Technology content', 'Minimum 100K followers', '4%+ engagement rate'],
-      target_audience: 'Tech-savvy professionals and entrepreneurs',
-      deliverables: ['App Review Video', 'Instagram Reel', 'LinkedIn Post'],
+      timeline_end: '2024-09-15',
+      requirements: ['Tech knowledge', 'YouTube videos', 'App reviews'],
+      target_audience: 'Tech enthusiasts 25-40',
+      deliverables: ['1 review video', '2 tutorial videos', 'Instagram posts'],
       applications_count: 8,
-      created_at: '2024-05-20T14:30:00Z',
+      created_at: '2024-05-22T14:30:00Z',
       brand_profiles: {
-        company_name: 'TechStartup Inc.',
+        company_name: 'ProductiveTech Inc.',
         industry: 'Technology',
         location: 'San Francisco, CA',
-        website: 'https://techstartup.com',
-        description: 'Innovative tech company developing cutting-edge mobile applications and AI solutions.'
+        website: 'https://productivetech.com',
+        description: 'Innovative productivity tools for modern professionals'
       }
     }
   };
@@ -61,15 +61,18 @@ function getMockCampaign(campaignId: string) {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const campaignId = params.id;
+    // Await params to fix Next.js warning
+    const { id: campaignId } = await params
+    console.log('Fetching campaign:', campaignId);
 
     // Check if this is a demo campaign (not a valid UUID)
     if (!isValidUUID(campaignId)) {
-      const mockCampaign = getMockCampaign(campaignId);
+      const mockCampaign = getMockCampaignData(campaignId);
       if (mockCampaign) {
+        console.log('Returning mock campaign data');
         return NextResponse.json(mockCampaign);
       } else {
         return NextResponse.json({ error: 'Campaign not found' }, { status: 404 });
@@ -79,7 +82,7 @@ export async function GET(
     // Handle real UUID campaigns from database
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
       console.error('Missing Supabase environment variables');
-      return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
+      return NextResponse.json({ error: 'Database configuration error' }, { status: 500 });
     }
 
     const supabase = createClient(
@@ -87,19 +90,23 @@ export async function GET(
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
     );
 
-    // First, fetch the campaign
+    // Fetch the campaign
     const { data: campaign, error: campaignError } = await supabase
       .from('campaigns')
       .select('*')
       .eq('id', campaignId)
       .single();
 
-    if (campaignError || !campaign) {
+    if (campaignError) {
       console.error('Error fetching campaign:', campaignError);
       return NextResponse.json({ error: 'Campaign not found' }, { status: 404 });
     }
 
-    // Then fetch the brand profile
+    if (!campaign) {
+      return NextResponse.json({ error: 'Campaign not found' }, { status: 404 });
+    }
+
+    // Fetch brand profile separately
     const { data: brandProfile, error: brandError } = await supabase
       .from('brand_profiles')
       .select('company_name, industry, location, website, description')
@@ -110,15 +117,9 @@ export async function GET(
       console.error('Error fetching brand profile:', brandError);
     }
 
-    // Process the campaign data to match the expected structure
+    // Combine the data
     const processedCampaign = {
       ...campaign,
-      requirements: Array.isArray(campaign.requirements) ? campaign.requirements : 
-                   campaign.requirements?.niches || [],
-      deliverables: Array.isArray(campaign.deliverables) ? campaign.deliverables : [],
-      target_audience: typeof campaign.target_audience === 'string' ? 
-                      campaign.target_audience : 
-                      campaign.target_audience?.location || 'General audience',
       brand_profiles: brandProfile || {
         company_name: 'Unknown Company',
         industry: 'Unknown',
@@ -128,6 +129,7 @@ export async function GET(
       }
     };
 
+    console.log('Campaign found:', campaign.title);
     return NextResponse.json(processedCampaign);
 
   } catch (error) {
